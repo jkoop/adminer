@@ -59,9 +59,13 @@ if ($adminer->homepage()) {
 				echo "<input type='search' name='query' value='" . h($_POST["query"]) . "'>";
 				echo script("qsl('input').onkeydown = partialArg(bodyKeydown, 'search');", "");
 				echo " <input type='submit' name='search' value='" . lang('Search') . "'>\n";
+				if ($adminer->operator_regexp !== null) {
+					echo "<p><label><input type='checkbox' name='regexp' value='1'" . (empty($_POST['regexp']) ? '' : ' checked') . '>' . lang('as a regular expression') . '</label>';
+					echo doc_link(array('sql' => 'regexp.html', 'pgsql' => 'functions-matching.html#FUNCTIONS-POSIX-REGEXP')) . "</p>\n";
+				}
 				echo "</div></fieldset>\n";
 				if ($_POST["search"] && $_POST["query"] != "") {
-					$_GET["where"][0]["op"] = "LIKE %%";
+					$_GET["where"][0]["op"] = $adminer->operator_regexp === null || empty($_POST['regexp']) ? "LIKE %%" : $adminer->operator_regexp;
 					search_tables();
 				}
 			}
@@ -151,9 +155,12 @@ if ($adminer->homepage()) {
 			echo "</form>\n";
 			echo script("tableCheck();");
 		}
-
-		echo '<p class="links"><a href="' . h(ME) . 'create=">' . lang('Create table') . "</a>\n";
-		echo (support("view") ? '<a href="' . h(ME) . 'view=">' . lang('Create view') . "</a>\n" : "");
+		$links = [];
+		$links[] = "<a href='" . h(ME) . "create='>" . lang('Create table') . "</a>";
+		if (support("view")) {
+			$links[] = "<a href='" . h(ME) . "view='>" . lang('Create view') . "</a>";
+		}
+		echo generate_linksbar($links);
 
 		if (support("routine")) {
 			echo "<h3 id='routines'>" . lang('Routines') . "</h3>\n";
@@ -172,10 +179,12 @@ if ($adminer->homepage()) {
 				}
 				echo "</table>\n";
 			}
-			echo '<p class="links">'
-				. (support("procedure") ? '<a href="' . h(ME) . 'procedure=">' . lang('Create procedure') . '</a>' : '')
-				. '<a href="' . h(ME) . 'function=">' . lang('Create function') . "</a>\n"
-			;
+			$links = [];
+			if (support('procedure')) {
+				$links[] = "<a href='" . h(ME) . "procedure='>" . lang('Create procedure') . "</a>";
+			}
+			$links[] = "<a href='" . h(ME) . "function='>" . lang('Create function') . "</a>";
+			echo generate_linksbar($links);
 		}
 
 		if (support("sequence")) {
@@ -190,7 +199,7 @@ if ($adminer->homepage()) {
 				}
 				echo "</table>\n";
 			}
-			echo "<p class='links'><a href='" . h(ME) . "sequence='>" . lang('Create sequence') . "</a>\n";
+			echo generate_linksbar(["<a href='" . h(ME) . "sequence='>" . lang('Create sequence') . "</a>"]);
 		}
 
 		if (support("type")) {
@@ -205,7 +214,7 @@ if ($adminer->homepage()) {
 				}
 				echo "</table>\n";
 			}
-			echo "<p class='links'><a href='" . h(ME) . "type='>" . lang('Create type') . "</a>\n";
+			echo generate_linksbar(["<a href='" . h(ME) . "type='>" . lang('Create type') . "</a>"]);
 		}
 
 		if (support("event")) {
@@ -227,7 +236,7 @@ if ($adminer->homepage()) {
 					echo "<p class='error'><code class='jush-sqlset'>event_scheduler</code>: " . h($event_scheduler) . "\n";
 				}
 			}
-			echo '<p class="links"><a href="' . h(ME) . 'event=">' . lang('Create event') . "</a>\n";
+			echo generate_linksbar(["<a href='" . h(ME) . "event='>" . lang('Create event') . "</a>"]);
 		}
 
 		if ($tables_list) {

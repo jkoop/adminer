@@ -98,6 +98,7 @@ if (!$error && $_POST) {
 						$q = substr($query, 0, $pos);
 						$commands++;
 						$print = "<pre id='sql-$commands'><code class='jush-$jush'>" . $adminer->sqlCommandQuery($q) . "</code></pre>\n";
+						$print .= generate_linksbar(["<a href='#' class='copy-to-clipboard'>" . lang('Copy to clipboard') . "</a>"]);
 						if ($jush == "sqlite" && preg_match("~^$space*+ATTACH\\b~i", $q, $match)) {
 							// PHP doesn't support setting SQLITE_LIMIT_ATTACHED
 							echo $print;
@@ -225,7 +226,7 @@ if (!isset($_GET["import"])) {
 	echo script(($_POST ? "" : "qs('textarea').focus();\n") . "qs('#form').onsubmit = partial(sqlSubmit, qs('#form'), '" . js_escape(remove_from_uri("sql|limit|error_stops|only_errors|history")) . "');");
 	echo "<p>$execute\n";
 	echo lang('Limit rows') . ": <input type='number' name='limit' class='size' value='" . h($_POST ? $_POST["limit"] : $_GET["limit"]) . "'>\n";
-	
+
 } else {
 	echo "<fieldset><legend>" . lang('File upload') . "</legend><div>";
 	$gz = (extension_loaded("zlib") ? "[.gz]" : "");
@@ -253,7 +254,7 @@ if (!isset($_GET["import"]) && $history) {
 	for ($val = end($history); $val; $val = prev($history)) { // not array_reverse() to save memory
 		$key = key($history);
 		list($q, $time, $elapsed) = $val;
-		echo '<a href="' . h(ME . "sql=&history=$key") . '">' . lang('Edit') . "</a>"
+		echo '<a href="' . h(ME . "sql=&history=$key") . '" class="edit" title="' . lang('Edit') . '">' . lang('Edit') . "</a>"
 			. " <span class='time' title='" . @date('Y-m-d', $time) . "'>" . @date("H:i:s", $time) . "</span>" // @ - time zone may be not set
 			. " <code class='jush-$jush'>" . shorten_utf8(ltrim(str_replace("\n", " ", str_replace("\r", "", preg_replace('~^(#|-- ).*~m', '', $q)))), 80, "</code>")
 			. ($elapsed ? " <span class='time'>($elapsed)</span>" : "")
@@ -261,7 +262,7 @@ if (!isset($_GET["import"]) && $history) {
 		;
 	}
 	echo "<input type='submit' name='clear' value='" . lang('Clear') . "'>\n";
-	echo "<a href='" . h(ME . "sql=&history=all") . "'>" . lang('Edit all') . "</a>\n";
+	echo "<a href='" . h(ME . "sql=&history=all") . "' class='edit-all' title='" . lang('Edit all') . "'>" . lang('Edit all') . "</a>\n";
 	echo "</div></fieldset>\n";
 }
 ?>

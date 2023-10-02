@@ -22,7 +22,7 @@ foreach ($fields as $key => $field) {
 }
 
 list($select, $group) = $adminer->selectColumnsProcess($columns, $indexes);
-$is_group = count($group) < count($select);
+$is_group = count($group) < count($select) || strstr($select[0], "DISTINCT");
 $where = $adminer->selectSearchProcess($fields, $indexes);
 $order = $adminer->selectOrderProcess($fields, $indexes);
 $limit = $adminer->selectLimitProcess();
@@ -315,7 +315,7 @@ if (!$columns && support("table")) {
 			echo "<thead><tr>" . (!$group && $select
 				? ""
 				: "<td><input type='checkbox' id='all-page' class='jsonly'>" . script("qs('#all-page').onclick = partial(formCheck, /check/);", "")
-					. " <a href='" . h($_GET["modify"] ? remove_from_uri("modify") : $_SERVER["REQUEST_URI"] . "&modify=1") . "'>" . lang('Modify') . "</a>");
+					. " <a href='" . h($_GET["modify"] ? remove_from_uri("modify") : $_SERVER["REQUEST_URI"] . "&modify=1") . "' title='" . lang('Modify') . "' class='edit-all'>" . lang('Modify') . "</a>");
 			$names = array();
 			$functions = array();
 			reset($select);
@@ -386,7 +386,7 @@ if (!$columns && support("table")) {
 				}
 				echo "<tr" . odd() . ">" . (!$group && $select ? "" : "<td>"
 					. checkbox("check[]", substr($unique_idf, 1), in_array(substr($unique_idf, 1), (array) $_POST["check"]))
-					. ($is_group || information_schema(DB) ? "" : " <a href='" . h(ME . "edit=" . urlencode($TABLE) . $unique_idf) . "' class='edit'>" . lang('edit') . "</a>")
+					. ($is_group || information_schema(DB) ? "" : " <a href='" . h(ME . "edit=" . urlencode($TABLE) . $unique_idf) . "' class='edit' title='" . lang('edit') . "'>" . lang('edit') . "</a>")
 				);
 
 				foreach ($row as $key => $val) {
@@ -430,7 +430,7 @@ if (!$columns && support("table")) {
 								$link .= where_link($i++, $k, $v);
 							}
 						}
-						
+
 						$val = select_value($val, $link, $field, $text_length);
 						$id = h("val[$unique_idf][" . bracket_escape($key) . "]");
 						$value = $_POST["val"][$unique_idf][bracket_escape($key)];
@@ -491,7 +491,7 @@ if (!$columns && support("table")) {
 					echo "\n";
 				}
 			}
-			
+
 			echo "<div class='footer'><div>\n";
 			if ($rows || $page) {
 				if ($pagination) {
@@ -523,7 +523,7 @@ if (!$columns && support("table")) {
 					}
 					echo "</fieldset>\n";
 				}
-				
+
 				echo "<fieldset>";
 				echo "<legend>" . lang('Whole result') . "</legend>";
 				$display_rows = ($exact_count ? "" : "~ ") . $found_rows;
