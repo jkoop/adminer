@@ -157,14 +157,6 @@ function h($string) {
 	return str_replace("\0", "&#0;", htmlspecialchars($string, ENT_QUOTES, 'utf-8'));
 }
 
-/** Convert \n to <br>
-* @param string
-* @return string
-*/
-function nl_br($string) {
-	return str_replace("\n", "<br>", $string); // nl2br() uses XHTML before PHP 5.3
-}
-
 /** Generate HTML checkbox
 * @param string
 * @param string
