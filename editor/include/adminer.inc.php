@@ -2,6 +2,7 @@
 class Adminer {
 	var $operators = array("<=", ">=");
 	var $_values = array();
+	public ?string $operator_regexp = null;
 
 	function name() {
 		return "<a href='https://www.adminer.org/editor/'" . target_blank() . " id='h1'>" . lang('Editor') . "</a>";

@@ -121,7 +121,7 @@ function referencable_primary($self) {
 * @return array
 */
 function adminer_settings() {
-	parse_str($_COOKIE["adminer_settings"], $settings);
+	parse_str($_COOKIE["adminer_settings"] ?? '', $settings);
 	return $settings;
 }
 
@@ -554,7 +554,7 @@ function doc_link($paths, $text = "<sup>?</sup>") {
 	);
 	if (preg_match('~MariaDB~', $server_info)) {
 		$urls['sql'] = "https://mariadb.com/kb/en/library/";
-		$paths['sql'] = (isset($paths['mariadb']) ? $paths['mariadb'] : str_replace(".html", "/", $paths['sql']));
+		$paths['sql'] = $paths['mariadb'] ?? str_replace(".html", "/", $paths['sql'] ?? '');
 	}
 	return ($paths[$jush] ? "<a href='" . h($urls[$jush] . $paths[$jush]) . "'" . target_blank() . ">$text</a>" : "");
 }

@@ -9,21 +9,21 @@ if (!defined("DRIVER")) {
 			var $extension = "MySQLi";
 
 			function __construct() {
-				parent::init();
+				parent::__construct();
 			}
 
-			function connect($server = "", $username = "", $password = "", $database = null, $port = null, $socket = null) {
+			function connect(?string $hostname = null, ?string $username = null, ?string $password = null, ?string $database = null, ?int $port = null, ?string $socket = null): bool {
 				global $adminer;
 				mysqli_report(MYSQLI_REPORT_OFF); // stays between requests, not required since PHP 5.3.4
-				list($host, $port) = explode(":", $server, 2); // part after : is used for port or socket
+				list($host, $port) = explode(":", $hostname, 2); // part after : is used for port or socket
 				$ssl = $adminer->connectSsl();
 				if ($ssl) {
 					$this->ssl_set($ssl['key'], $ssl['cert'], $ssl['ca'], '', '');
 				}
 				$return = @$this->real_connect(
-					($server != "" ? $host : ini_get("mysqli.default_host")),
-					($server . $username != "" ? $username : ini_get("mysqli.default_user")),
-					($server . $username . $password != "" ? $password : ini_get("mysqli.default_pw")),
+					($hostname != "" ? $host : ini_get("mysqli.default_host")),
+					($hostname . $username != "" ? $username : ini_get("mysqli.default_user")),
+					($hostname . $username . $password != "" ? $password : ini_get("mysqli.default_pw")),
 					$database,
 					(is_numeric($port) ? $port : ini_get("mysqli.default_port")),
 					(!is_numeric($port) ? $port : $socket),
@@ -33,7 +33,7 @@ if (!defined("DRIVER")) {
 				return $return;
 			}
 
-			function set_charset($charset) {
+			function set_charset(string $charset): bool {
 				if (parent::set_charset($charset)) {
 					return true;
 				}
@@ -1138,8 +1138,10 @@ if (!defined("DRIVER")) {
 		static $supports_check_constraints = null;
 		if (is_null($supports_check_constraints)) {
 			$supports_check_constraints = get_rows("SELECT COUNT(*) FROM `TABLES` WHERE `TABLE_SCHEMA` = 'information_schema' AND `TABLE_NAME` = 'CHECK_CONSTRAINTS'");
-			$supports_check_constraints = reset($supports_check_constraints)[0];
-			$supports_check_constraints = $supports_check_constraints > 0;
+			$supports_check_constraints = reset($supports_check_constraints);
+			if ($supports_check_constraints !== false) {
+				$supports_check_constraints = $supports_check_constraints[0] > 0;
+			}
 		}
 
 		return !preg_match("~scheme|sequence|type|view_trigger|materializedview" . (min_version(8) ? "" : "|descidx" . (min_version(5.1) ? "" : "|event|partitioning" . (min_version(5) ? "" : "|routine|trigger|view"))) . ($supports_check_constraints ? "|check" : "") . "~", $feature);

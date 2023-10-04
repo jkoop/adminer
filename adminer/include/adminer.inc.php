@@ -4,6 +4,7 @@
 class Adminer {
 	/** @var array operators used in select, null for all operators */
 	var $operators;
+	public ?string $operator_regexp = null;
 
 	/** Name in title and navigation
 	* @return string HTML code
@@ -1011,7 +1012,7 @@ bodyLoad('<?php echo (is_object($connection) ? preg_replace('~^(\d\.?\d).*~s', '
 					$links[] = "<a href='" . h(ME) . "import='" . bold(isset($_GET["import"])) . ">" . lang('Import') . "</a>";
 				}
 				if (support("dump")) {
-					$links[] = "<a href='" . h(ME) . "dump=" . urlencode(isset($_GET["table"]) ? $_GET["table"] : $_GET["select"]) . "' id='dump'" . bold(isset($_GET["dump"])) . ">" . lang('Export') . "</a>";
+					$links[] = "<a href='" . h(ME) . "dump=" . urlencode($_GET["table"] ?? $_GET["select"] ?? '') . "' id='dump'" . bold(isset($_GET["dump"])) . ">" . lang('Export') . "</a>";
 				}
 			}
 			echo generate_linksbar($links);

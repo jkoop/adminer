@@ -156,7 +156,7 @@ $collations = collations();
 $engines = engines();
 // case of engine may differ
 foreach ($engines as $engine) {
-	if (!strcasecmp($engine, $row["Engine"])) {
+	if (!strcasecmp($engine, $row["Engine"] ?? '')) {
 		$row["Engine"] = $engine;
 		break;
 	}
@@ -189,7 +189,7 @@ edit_fields($row["fields"], $collations, "TABLE", $foreign_keys);
 $comments = ($_POST ? $_POST["comments"] : adminer_setting("comments"));
 echo (support("comment")
 	? checkbox("comments", 1, $comments, lang('Comment'), "editingCommentsClick(this, true);", "jsonly")
-		. ' ' . (preg_match('~\n~', $row["Comment"])
+		. ' ' . (preg_match('~\n~', $row["Comment"] ?? '')
 			? "<textarea name='Comment' rows='2' cols='20'" . ($comments ? "" : " class='hidden'") . ">" . h($row["Comment"]) . "</textarea>"
 			: '<input name="Comment" value="' . h($row["Comment"]) . '" data-maxlength="' . (min_version(5.5) ? 2048 : 60) . '"' . ($comments ? "" : " class='hidden'") . '>'
 		)
@@ -203,7 +203,7 @@ echo (support("comment")
 <?php if ($TABLE != "") { ?><input type="submit" name="drop" value="<?php echo lang('Drop'); ?>"><?php echo confirm(lang('Drop %s?', $TABLE)); ?><?php } ?>
 <?php
 if (support("partitioning")) {
-	$partition_table = preg_match('~RANGE|LIST~', $row["partition_by"]);
+	$partition_table = preg_match('~RANGE|LIST~', $row["partition_by"] ?? '');
 	print_fieldset("partition", lang('Partition by'), $row["partition_by"]);
 	?>
 <p>

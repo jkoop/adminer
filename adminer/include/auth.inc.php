@@ -156,7 +156,7 @@ stop_session(true);
 
 if (isset($_GET["username"]) && is_string(get_password())) {
 	list($host, $port) = explode(":", SERVER, 2);
-	if (preg_match('~^\s*([-+]?\d+)~', $port, $match) && ($match[1] < 1024 || $match[1] > 65535)) { // is_numeric('80#') would still connect to port 80
+	if (preg_match('~^\s*([-+]?\d+)~', $port ?? '', $match) && ($match[1] < 1024 || $match[1] > 65535)) { // is_numeric('80#') would still connect to port 80
 		auth_error(lang('Connecting to privileged ports is not allowed.'));
 	}
 	check_invalid_login();
@@ -167,7 +167,7 @@ if (isset($_GET["username"]) && is_string(get_password())) {
 $login = null;
 if (!is_object($connection) || ($login = $adminer->login($_GET["username"], get_password())) !== true) {
 	$error = (is_string($connection) ? h($connection) : (is_string($login) ? $login : lang('Invalid credentials.')));
-	auth_error($error . (preg_match('~^ | $~', get_password()) ? '<br>' . lang('There is a space in the input password which might be the cause.') : ''));
+	auth_error($error . (preg_match('~^ | $~', get_password() ?? '') ? '<br>' . lang('There is a space in the input password which might be the cause.') : ''));
 }
 
 if ($_POST["logout"] && $has_token && !verify_token()) {

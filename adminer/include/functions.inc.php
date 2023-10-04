@@ -149,12 +149,11 @@ function target_blank() {
 	return ' target="_blank" rel="noreferrer noopener"';
 }
 
-/** Escape for HTML
-* @param string
-* @return string
-*/
-function h($string) {
-	return str_replace("\0", "&#0;", htmlspecialchars($string, ENT_QUOTES, 'utf-8'));
+/**
+ * Escape for HTML
+ */
+function h(?string $string): string {
+	return str_replace("\0", "&#0;", htmlspecialchars($string ?? '', ENT_QUOTES, 'utf-8'));
 }
 
 /** Generate HTML checkbox
@@ -543,20 +542,21 @@ function convert_fields($columns, $fields, $select = array()) {
 	return $return;
 }
 
-/** Set cookie valid on current path
-* @param string
-* @param string
-* @param int number of seconds, 0 for session cookie
-* @return bool
-*/
-function cookie($name, $value, $lifetime = 2592000) { // 2592000 - 30 days
+/**
+ * Set cookie valid on current path
+ * @param int number of seconds, 0 for session cookie
+ */
+function cookie(string $name, string $value, int $lifetime = 2592000): bool { // 30 days
 	global $HTTPS;
-	return header("Set-Cookie: $name=" . urlencode($value)
-		. ($lifetime ? "; expires=" . gmdate("D, d M Y H:i:s", time() + $lifetime) . " GMT" : "")
-		. "; path=" . preg_replace('~\?.*~', '', $_SERVER["REQUEST_URI"])
-		. ($HTTPS ? "; secure" : "")
-		. "; HttpOnly; SameSite=lax",
-		false);
+	
+	return setcookie(
+		$name,
+		$value,
+		$lifetime ? time() + $lifetime : 0,
+		preg_replace('~\?.*~', '', $_SERVER["REQUEST_URI"]),
+		secure: $HTTPS,
+		httponly: true,
+	);
 }
 
 /** Restart stopped session
@@ -564,6 +564,7 @@ function cookie($name, $value, $lifetime = 2592000) { // 2592000 - 30 days
 */
 function restart_session() {
 	if (!ini_bool("session.use_cookies")) {
+		if (session_status() == PHP_SESSION_ACTIVE) return; // already have a session
 		session_start();
 	}
 }
@@ -599,14 +600,10 @@ function set_session($key, $val) {
 	$_SESSION[$key][DRIVER][SERVER][$_GET["username"]] = $val; // used also in auth.inc.php
 }
 
-/** Get authenticated URL
-* @param string
-* @param string
-* @param string
-* @param string
-* @return string
-*/
-function auth_url($vendor, $server, $username, $db = null) {
+/**
+ * Get authenticated URL
+ */
+function auth_url(string $vendor, string $server, string $username, string $db = null, string $sshServer = null, string $sshUsername = null): string {
 	global $drivers;
 	preg_match('~([^?]*)\??(.*)~', remove_from_uri(implode("|", array_keys($drivers)) . "|username|" . ($db !== null ? "db|" : "") . session_name()), $match);
 	return "$match[1]?"
