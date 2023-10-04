@@ -1,4 +1,4 @@
-# AdminerEvo
+# AdminerJK
 
 **Adminer** - Database management in a single PHP file  
 **Adminer Editor** - Data manipulation for end-users
@@ -6,9 +6,12 @@
 ### A bit of history
 
 The original Adminer was created and maintained by Jakub Vrána in the [vrana/adminer](https://github.com/vrana/adminer) repository.
-Not being maintained for more than two years and being a daily user of Adminer, I've tried to get in touch with the original developer to propose my help to continue the project, but without success, I got no answer.
-I have then started to search if someone would be interested in continuing the project with me and found someone who seemed to have the same interest and view on the future of this project.
-I am now starting to take over the project under a slightly different name and will try to keep compatibility with all current database engines but also to give Adminer a new features, layout, etc.
+
+Not being maintained for more than two years and being a daily user of Adminer, [Lionel Laffineur](https://github.com/LionelLaffineur) tried to get in touch with the original developer to propose my help to continue the project, but without success, he got no answer.
+
+Lionel is now starting to take over the project under a slightly different name and will try to keep compatibility with all current database engines but also to give Adminer a new features, layout, etc.
+
+I forked [Lionel's Adminer, AdminerEvo](https://github.com/adminerevo/adminerevo), to package it as a standalone Docker image, and add features such as SSH tunnelling. My fork will be kept up-to-date with his.
 
 ### Before participating
 
@@ -20,10 +23,8 @@ It would be sad spending time/energy on development of a feature which would not
 |||
 |---|---|
 |Supports|MySQL, MariaDB, PostgreSQL, SQLite, MS SQL, Oracle, Elasticsearch, MongoDB, SimpleDB (plugin), Firebird (plugin), ClickHouse (plugin)|
-|Requirements|PHP 5+|
+|Requirements|~~PHP 5+~~ Docker|
 |Licence|Apache License 2.0 or GPL 2|
-
-&nbsp;
 
 |File|Purpose|
 |---|---|
