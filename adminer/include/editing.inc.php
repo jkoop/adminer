@@ -86,7 +86,7 @@ function select($result, $connection2 = null, $orgtables = array(), $limit = 0) 
 				}
 			}
 			if ($link) {
-				$val = "<a href='" . h($link) . "'" . (is_url($link) ? target_blank() : '') . ">$val</a>";
+				$val = "<a href='" . h($link) . "'" . (is_url($link) ? TARGET_BLANK : '') . ">$val</a>";
 			}
 			echo "<td>$val";
 		}
@@ -556,7 +556,7 @@ function doc_link($paths, $text = "<sup>?</sup>") {
 		$urls['sql'] = "https://mariadb.com/kb/en/library/";
 		$paths['sql'] = $paths['mariadb'] ?? str_replace(".html", "/", $paths['sql'] ?? '');
 	}
-	return ($paths[$jush] ? "<a href='" . h($urls[$jush] . $paths[$jush]) . "'" . target_blank() . ">$text</a>" : "");
+	return ($paths[$jush] ? "<a href='" . h($urls[$jush] . $paths[$jush]) . "'" . TARGET_BLANK . ">$text</a>" : "");
 }
 
 /** Wrap gzencode() for usage in ob_start()

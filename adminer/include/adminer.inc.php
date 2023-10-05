@@ -10,7 +10,7 @@ class Adminer {
 	* @return string HTML code
 	*/
 	function name() {
-		return "<a href='https://www.adminerevo.org/'" . target_blank() . " id='h1'>AdminerEvo</a>";
+		return "<a href='https://github.com/jkoop/adminer'" . TARGET_BLANK . " id='h1'>AdminerJK</a>";
 	}
 
 	/** Connection parameters
@@ -147,7 +147,7 @@ class Adminer {
 	*/
 	function login($login, $password) {
 		if ($password == "") {
-			return lang('Adminer does not support accessing a database without a password, <a href="https://www.adminer.org/en/password/"%s>more information</a>.', target_blank());
+			return lang('Adminer does not support accessing a database without a password, <a href="https://www.adminer.org/en/password/"%s>more information</a>.', TARGET_BLANK);
 		}
 		return true;
 	}
@@ -297,7 +297,7 @@ class Adminer {
 		if (preg_match('~json~', $field["type"])) {
 			$return = "<code class='jush-js'>$return</code>";
 		}
-		return ($link ? "<a href='" . h($link) . "'" . (is_url($link) ? target_blank() : "") . ">$return</a>" : $return);
+		return ($link ? "<a href='" . h($link) . "'" . (is_url($link) ? TARGET_BLANK : "") . ">$return</a>" : $return);
 	}
 
 	/** Value conversion used in select and edit

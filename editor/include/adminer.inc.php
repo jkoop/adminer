@@ -5,7 +5,7 @@ class Adminer {
 	public ?string $operator_regexp = null;
 
 	function name() {
-		return "<a href='https://www.adminer.org/editor/'" . target_blank() . " id='h1'>" . lang('Editor') . "</a>";
+		return "<a href='https://www.adminer.org/editor/'" . TARGET_BLANK . " id='h1'>" . lang('Editor') . "</a>";
 	}
 
 	//! driver, ns
@@ -203,7 +203,7 @@ ORDER BY ORDINAL_POSITION", null, "") as $row) { //! requires MySQL 5
 			$return = (preg_match('~^(1|t|true|y|yes|on)$~i', $val) ? lang('yes') : lang('no'));
 		}
 		if ($link) {
-			$return = "<a href='$link'" . (is_url($link) ? target_blank() : "") . ">$return</a>";
+			$return = "<a href='$link'" . (is_url($link) ? TARGET_BLANK : "") . ">$return</a>";
 		}
 		if (!$link && !like_bool($field) && preg_match(number_type(), $field["type"])) {
 			$return = "<div class='number'>$return</div>"; // Firefox doesn't support <colgroup>
@@ -582,7 +582,7 @@ qsl('div').onclick = whisperClick;", "")
 		?>
 <h1>
 <?php echo $this->name(); ?> <span class="version"><?php echo $VERSION; ?></span>
-<a href="https://www.adminer.org/editor/#download"<?php echo target_blank(); ?> id="version"><?php echo (version_compare($VERSION, $_COOKIE["adminer_version"]) < 0 ? h($_COOKIE["adminer_version"]) : ""); ?></a>
+<a href="https://www.adminer.org/editor/#download"<?php echo TARGET_BLANK; ?> id="version"><?php echo (version_compare($VERSION, $_COOKIE["adminer_version"]) < 0 ? h($_COOKIE["adminer_version"]) : ""); ?></a>
 </h1>
 <?php
 		if ($missing == "auth") {

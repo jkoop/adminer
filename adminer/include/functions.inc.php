@@ -142,12 +142,7 @@ function nonce() {
 	return ' nonce="' . get_nonce() . '"';
 }
 
-/** Get a target="_blank" attribute
-* @return string
-*/
-function target_blank() {
-	return ' target="_blank" rel="noreferrer noopener"';
-}
+const TARGET_BLANK = ' target="_blank" rel="noreferrer noopener"';
 
 /**
  * Escape for HTML
